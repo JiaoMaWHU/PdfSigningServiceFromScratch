@@ -31,3 +31,5 @@ In this guide, we will use AWS KMS as our asynmmetric keys and build a working e
 ### Step 1. 
 
 ## Resources
+[Generate CSR for AWS KMS](https://github.com/g-a-d/aws-kms-sign-csr)
+[AWSKMSContentSigner Reference](https://stackoverflow.com/questions/64867778/sign-a-pdfdocument-using-the-digital-signature-returned-by-aws-kms)
