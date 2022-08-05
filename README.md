@@ -28,8 +28,8 @@ It's easy to use the asynmmetric key pair stored in your system to generate a PD
 
 In this guide, we will use AWS KMS as our asynmmetric keys and build a working example.
 
-### Step 1. 
+### Step 1. WIP
 
 ## Resources
-[Generate CSR for AWS KMS](https://github.com/g-a-d/aws-kms-sign-csr)
-[AWSKMSContentSigner Reference](https://stackoverflow.com/questions/64867778/sign-a-pdfdocument-using-the-digital-signature-returned-by-aws-kms)
+- [Generate CSR for AWS KMS](https://github.com/g-a-d/aws-kms-sign-csr)
+- [AWSKMSContentSigner Reference](https://stackoverflow.com/questions/64867778/sign-a-pdfdocument-using-the-digital-signature-returned-by-aws-kms)
