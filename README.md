@@ -1,6 +1,6 @@
 # Build A PDF Signing Service From Scratch
 
-Early this year, I was able to build a digital signature service. The service is basically a RESTful backend service that takes a PDF file as input in the API request and returns the signed file in the response. In this story, I will summarize the concepts and resources used in the development and also provide a step-by-step guide for building a PoC.
+I was able to build a digital signature service early 2022. The service is basically a RESTful backend service that takes a PDF file as input in the API request and returns the signed file in the response. In this story, I will summarize the concepts and resources used in the development and also provide a step-by-step guide for building a PoC.
 
 ## Concepts
 > A digital signature is a mathematical scheme for verifying the authenticity of digital messages or documents. (Wikipedia)
