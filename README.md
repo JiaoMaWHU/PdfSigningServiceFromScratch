@@ -28,7 +28,18 @@ It's easy to use the asynmmetric key pair stored in your system to generate a PD
 
 In this guide, we will use AWS KMS as our asynmmetric keys and build a working example.
 
-### Step 1. WIP
+### Step 1. Create your asymmetric key pair in AWS
+Follow the AWS guide to create your own asymmetric key pair in aws console. [This](https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html) is one post I found on google. In this guide, I use "RSA_2048" as the Key Spec and "Sign and verify" as Key Usage.
+
+### Step 2. Generate a CSR for your public key
+
+
+### Step 3. Get the Cert from a third-party tool
+
+### Step 4. Sign your Pdf using the cert and AWS
+
+### Step 5. Verify the signature
+
 
 ## Resources
 - [Generate CSR for AWS KMS](https://github.com/g-a-d/aws-kms-sign-csr)
