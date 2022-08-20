@@ -32,11 +32,13 @@ In this guide, we will use AWS KMS as our asynmmetric keys and build a working e
 Follow the AWS guide to create your own asymmetric key pair in aws console. [This](https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html) is one post I found on google. In this guide, I use "RSA_2048" as the Key Spec and "Sign and verify" as Key Usage.
 
 ### Step 2. Generate a CSR for your public key
-
+Follow this [repo](https://github.com/g-a-d/aws-kms-sign-csr) to create a CSR using your KMS pair. Follow the "RSA" one. As the result, you should have a CSR called `new.csr`.
 
 ### Step 3. Get the Cert from a third-party tool
+Now we need to request a public CA to sign the CSR. Here I will use a free [website](https://8gwifi.org/signcsr.jsp) I found from Google. Paste your CSR into the box, select "Use Site Private Key" and click "Submit". The result will be in a box below in the PEM format. Copy the content and paste into a file, let's call it "cert.pem".
 
 ### Step 4. Sign your Pdf using the cert and AWS
+Clone this repo and open it using Intellij (create a project using existing files). Replace the pem file in the resource folder with your own.
 
 ### Step 5. Verify the signature
 
