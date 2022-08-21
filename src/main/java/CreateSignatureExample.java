@@ -12,6 +12,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Calendar;
+import java.util.Objects;
+
 import org.apache.pdfbox.examples.signature.SigUtils;
 import org.apache.pdfbox.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -20,8 +22,8 @@ import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.SignatureOptions;
 
 public class CreateSignatureExample extends CreateSignatureBase {
-  public CreateSignatureExample(KeyStore keystore, char[] pin) throws KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException, CertificateException, IOException {
-    super(keystore, pin);
+  public CreateSignatureExample(String certPath, String keyId) throws CertificateException, IOException {
+    super(certPath, keyId);
   }
 
   public void signDetached(File file) throws IOException {
@@ -83,45 +85,14 @@ public class CreateSignatureExample extends CreateSignatureBase {
   }
 
   public static void main(String[] args) throws IOException, GeneralSecurityException {
-    if (args.length < 3) {
-      usage();
-      System.exit(1);
-    }
-
-    String tsaUrl = null;
-    boolean externalSig = false;
-
-    for(int i = 0; i < args.length; ++i) {
-      if (args[i].equals("-tsa")) {
-        ++i;
-        if (i >= args.length) {
-          usage();
-          System.exit(1);
-        }
-
-        tsaUrl = args[i];
-      }
-
-      if (args[i].equals("-e")) {
-        externalSig = true;
-      }
-    }
-
-    KeyStore keystore = KeyStore.getInstance("PKCS12");
-    char[] password = args[1].toCharArray();
-    InputStream is = new FileInputStream(args[0]);
-    keystore.load(is, password);
-    is.close();
-    CreateSignatureExample signing = new CreateSignatureExample(keystore, password);
-    signing.setExternalSigning(externalSig);
-    File inFile = new File(args[2]);
+    String certPath = Objects.requireNonNull(CreateSignatureExample.class.getResource("/cert.pem")).getPath();
+    String inFilePath = Objects.requireNonNull(CreateSignatureExample.class.getResource("/dummy.pdf")).getPath();
+    String kmsKeyId = "arn:aws:kms:us-east-2:xxxxxxx";
+    CreateSignatureExample signing = new CreateSignatureExample(certPath, kmsKeyId);
+    File inFile = new File(inFilePath);
     String name = inFile.getName();
     String substring = name.substring(0, name.lastIndexOf(46));
-    File outFile = new File(inFile.getParent(), substring + "_signed.pdf");
-    signing.signDetached(inFile, outFile, tsaUrl);
-  }
-
-  private static void usage() {
-    System.err.println("usage: java " + CreateSignatureExample.class.getName() + " <pkcs12_keystore> <password> <pdf_to_sign>\noptions:\n  -tsa <url>    sign timestamp using the given TSA server\n  -e            sign using external signature creation scenario");
+    File outFile = new File("~/dummy_signed.pdf");
+    signing.signDetached(inFile, outFile);
   }
 }

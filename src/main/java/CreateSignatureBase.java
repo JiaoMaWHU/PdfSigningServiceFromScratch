@@ -1,3 +1,4 @@
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
@@ -8,8 +9,10 @@ import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import org.apache.pdfbox.examples.signature.SigUtils;
 import org.apache.pdfbox.examples.signature.ValidationTimeStamp;
@@ -24,36 +27,21 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 
 public abstract class CreateSignatureBase implements SignatureInterface {
-  private PrivateKey privateKey;
+
   private Certificate[] certificateChain;
   private String tsaUrl;
   private boolean externalSigning;
+  private final String keyId;
 
-  public CreateSignatureBase(KeyStore keystore, char[] pin) throws KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException, IOException, CertificateException {
-    Enumeration<String> aliases = keystore.aliases();
-    Certificate cert = null;
-
-    while(cert == null && aliases.hasMoreElements()) {
-      String alias = (String)aliases.nextElement();
-      this.setPrivateKey((PrivateKey)keystore.getKey(alias, pin));
-      Certificate[] certChain = keystore.getCertificateChain(alias);
-      if (certChain != null) {
-        this.setCertificateChain(certChain);
-        cert = certChain[0];
-        if (cert instanceof X509Certificate) {
-          ((X509Certificate)cert).checkValidity();
-          SigUtils.checkCertificateUsage((X509Certificate)cert);
-        }
-      }
+  public CreateSignatureBase(String certPath, String keyId) throws IOException, CertificateException {
+    try (FileInputStream is = new FileInputStream(certPath)) {
+      this.keyId = keyId;
+      CertificateFactory fact = CertificateFactory.getInstance("X.509");
+      X509Certificate cert = (X509Certificate) fact.generateCertificate(is);
+      cert.checkValidity();
+      SigUtils.checkCertificateUsage(cert);
+      setCertificateChain(new X509Certificate[]{cert});
     }
-
-    if (cert == null) {
-      throw new IOException("Could not find certificate");
-    }
-  }
-
-  public final void setPrivateKey(PrivateKey privateKey) {
-    this.privateKey = privateKey;
   }
 
   public final void setCertificateChain(Certificate[] certificateChain) {
@@ -72,7 +60,7 @@ public abstract class CreateSignatureBase implements SignatureInterface {
     try {
       CMSSignedDataGenerator gen = new CMSSignedDataGenerator();
       X509Certificate cert = (X509Certificate)this.certificateChain[0];
-      ContentSigner sha1Signer = new AWSKMSContentSigner();
+      ContentSigner sha1Signer = new AWSKMSContentSigner(this.keyId);
       gen.addSignerInfoGenerator((new JcaSignerInfoGeneratorBuilder((new JcaDigestCalculatorProviderBuilder()).build())).build(sha1Signer, cert));
       gen.addCertificates(new JcaCertStore(Arrays.asList(this.certificateChain)));
       CMSProcessableInputStream msg = new CMSProcessableInputStream(content);
