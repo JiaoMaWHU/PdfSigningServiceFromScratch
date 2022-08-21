@@ -42,14 +42,16 @@ Clone this repo and open it using Intellij (create a project using existing file
 
 Great, now you can run the `main` method in `CreateSignatureExample.java`. It signs the `dummy.pdf` provided and saves `dummy_signed.pdf` to the output path.
 
+**What happened inside the java project?** The java project generates the hash of the pdf, signs it using KMS api. The signed hash + the cert you provided is the acutal signature. Finally, signature is attached to the pdf, and bang!! your signed pdf is there.
+
 ### Step 5. Verify the signature
 You can verify the signature inside `dummy_signed.pdf`. For example, if you open it with Adobe Reader, open the signture panel, you can see all the information related to the signature. 
 
-Ideally, it should display a yellow Exclamation mark saying `The validity of the document certification is UNKNOWN` and also `Document has not been modified since it was certified`. It basically means the signature itself is valid, however, the cert can not be verified. This makes sense since we're signing the CSR using `8gwifi.org`, and it's not a public CA.
+Ideally, it should display a yellow Exclamation mark saying `The validity of the document certification is UNKNOWN` and also `Document has not been modified since it was certified`. It basically means the signature itself is valid, however, the cert can not be verified. This makes sense since we're signing the CSR using `8gwifi.org` which it's not a public CA.
 
 If you see a red mark in Adobe Reader, bad news, your signature is not valid.
 
-If you were able to sign your CSR by a real public CA, green mark will show up in the panel, congrats! everything is perfect now.
+If you were able to sign your CSR using a real public CA, green mark will show up in the panel, congrats! everything is perfect now.
 
 ## Resources
 - [Generate CSR for AWS KMS](https://github.com/g-a-d/aws-kms-sign-csr)
