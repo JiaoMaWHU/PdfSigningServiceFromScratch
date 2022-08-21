@@ -49,6 +49,8 @@ You can verify the signature inside `dummy_signed.pdf`. For example, if you open
 
 Ideally, it should display a yellow Exclamation mark saying `The validity of the document certification is UNKNOWN` and also `Document has not been modified since it was certified`. It basically means the signature itself is valid, however, the cert can not be verified. This makes sense since we're signing the CSR using `8gwifi.org` which it's not a public CA.
 
+![Screenshot](verify-pdf.png)
+
 If you see a red mark in Adobe Reader, bad news, your signature is not valid.
 
 If you were able to sign your CSR using a real public CA, green mark will show up in the panel, congrats! everything is perfect now.
