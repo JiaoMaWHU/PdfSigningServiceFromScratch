@@ -35,13 +35,21 @@ Follow the AWS guide to create your own asymmetric key pair in aws console. [Thi
 Follow this [repo](https://github.com/g-a-d/aws-kms-sign-csr) to create a CSR using your KMS pair. Follow the "RSA" one. As the result, you should have a CSR called `new.csr`.
 
 ### Step 3. Get the Cert from a third-party tool
-Now we need to request a public CA to sign the CSR. Here I will use a free [website](https://8gwifi.org/signcsr.jsp) I found from Google. Paste your CSR into the box, select "Use Site Private Key" and click "Submit". The result will be in a box below in the PEM format. Copy the content and paste into a file, let's call it "cert.pem".
+Now we need to request a public CA to sign the CSR. Here I will use a free webiste [8gwifi.org](https://8gwifi.org/signcsr.jsp) I found from Google. Paste the content of `new.csr` into the box, select "Use Site Private Key" and click "Submit". The result will be in a box below in the PEM format. Copy the content and paste into a file, let's call it "cert.pem".
 
 ### Step 4. Sign your Pdf using the cert and AWS
-Clone this repo and open it using Intellij (create a project using existing files). Replace the pem file in the resource folder with your own.
+Clone this repo and open it using Intellij (create a project using existing files). Replace the pem file in the resource folder with your own. Change the kmsKeyId in `CreateSignatureExample.java`. Now you need to set the aws region to use. You can follow this [guide](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html), the `region` should be where you kms key is created. After this, change the outfile path in the `main` method to where ever you want.
+
+Great, now you can run the `main` method in `CreateSignatureExample.java`. It signs the `dummy.pdf` provided and saves `dummy_signed.pdf` to the output path.
 
 ### Step 5. Verify the signature
+You can verify the signature inside `dummy_signed.pdf`. For example, if you open it with Adobe Reader, open the signture panel, you can see all the information related to the signature. 
 
+Ideally, it should display a yellow Exclamation mark saying `The validity of the document certification is UNKNOWN` and also `Document has not been modified since it was certified`. It basically means the signature itself is valid, however, the cert can not be verified. This makes sense since we're signing the CSR using `8gwifi.org`, and it's not a public CA.
+
+If you see a red mark in Adobe Reader, bad news, your signature is not valid.
+
+If you were able to sign your CSR by a real public CA, green mark will show up in the panel, congrats! everything is perfect now.
 
 ## Resources
 - [Generate CSR for AWS KMS](https://github.com/g-a-d/aws-kms-sign-csr)
